@@ -1,0 +1,178 @@
+﻿@using Newtonsoft.Json
+@using _01_DbModel
+@using _01_DbModel.AppModel
+
+@inject IConfiguration Configuration
+
+@{
+
+    Dictionary<string, object> settings = Configuration.GetSection("IpAdres")
+                                                       .Get<Dictionary<string, object>>();
+    string json = JsonConvert.SerializeObject(settings);
+    var IpAdres = JsonConvert.DeserializeObject<IpAdres>(json);
+}
+
+<!DOCTYPE html>
+<html lang="tr" style="width:100%; max-width:780px; height:480px">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/lib/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/DataTables/DataTables-1.12.1/css/jquery.dataTables.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/DataTables/Buttons-2.2.3/css/buttons.dataTables.min.css" asp-append-version="true" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/popup/popper.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/lib/DataTables/DataTables-1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/DataTables/Buttons-2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="~/lib/DataTables/Buttons-2.2.3/js/buttons.bootstrap5.min.js"></script>
+    <script src="~/js/toast.js"></script>
+
+    <script>
+        let url_Api = "", url_Admin = "", url_Terminal = "";
+
+        url_Api = '@Html.Raw(IpAdres?.IpApi.ToString())';
+        url_Admin = '@Html.Raw(IpAdres?.IpAdminApp.ToString())';
+        url_Terminal = '@Html.Raw(IpAdres?.IpClientApp.ToString())';
+
+
+        let barkod_Personel = "";
+        let barkod_Rulo = "";
+        let barkod_Pano = "";
+        let barkod_Durus = "";
+         
+        let yeniGuid = '@Html.Raw(new Guid())';
+         
+        let id = "";
+
+        function cookie_Set(cname, cvalue) {
+            const d = new Date();
+            d.setTime(d.getTime() + (5 * 365 * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function cookie_Get(cname) {
+            let name = cname + "=";
+            let ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+    </script>
+
+</head>
+
+<body class="bg-black text-white">
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark m-0 p-0 " aria-label="">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-page="/Index"><img style="height:32px" src="~/img/logo-white.png" /></a>
+                <div id="panel_Gosterge" class="d-flex flex-row ms-1 w-100" style="display:none">
+                    <div class="p-0 m-0">
+                        <p class="p-0 m-0 ms-2" style="font-size:small"> İstasyon </p> <span class="badge bg-secondary fs-6" id="label_Istasyon"></span>
+                    </div>
+                    <div class="p-0 m-0 ms-2">
+                        <p class="p-0 m-0" style="font-size:small"> Çalışma </p> <span class="badge bg-secondary fs-6" id="label_Calisma"></span>
+                    </div>
+                    <div class="p-0 m-0 ms-2">
+                        <p class="p-0 m-0" style="font-size:small"> Başlangıç </p> <span class="badge bg-secondary fs-6" id="label_Bas"></span>
+                    </div>
+                    <div class="p-0 m-0 ms-2">
+                        <p class="p-0 m-0" style="font-size:small"> Bitiş </p> <span class="badge bg-secondary fs-6" id="label_Bit"></span>
+                    </div>
+                </div>
+
+                <div class="float-end btn-group">
+                    <button id="buton_Connection" type="button"
+                            class="btn btn-primary p-1"
+                            style="width:50px"
+                            data-bs-toggle="popover"
+                            data-bs-content="Bağlantı Kuruldu">
+                        <i class="bi bi-ethernet m-0" style="font-size:20px"></i>
+                    </button>
+                    <button type="button"
+                            class="btn btn-warning p-1"
+                            style="width:50px"
+                            onclick="istasyon_Git()">
+                        <i class="bi bi-diagram-3-fill m-0" style="font-size:20px"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid m-0 p-0">
+        <main role="main" class=" m-0 p-0">
+            @RenderBody()
+        </main>
+    </div>
+
+    <div class="modal fade" id="panel_BaglantiYok" data-bs-keyboard="false" tabindex="-1" aria-labelledby="panel_BaglantiYokLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="panel_BaglantiYokLabel"> Server Bağlantısı Yok </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-dark">
+                    <h3>
+                        Olası Sebepler
+                    </h3>
+                    <ul>
+                        <li> Ağ bağlantısında problemler olabilir. </li>
+                        <li> Server bilgisayarı kapalı olabilir. </li>
+                        <li> Server yazılımı çalışmıyor olabilir. </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="panel_CalismaYok" data-bs-keyboard="false" tabindex="-1" aria-labelledby="panel_CalismaYokLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title" id="panel_CalismaYokLabel">
+                        Planlanmış Çalışma Yok 
+                        <button type="button"
+                                                       class="btn btn-warning p-1"
+                                                       style="width:50px"
+                                                       onclick="istasyon_Git()">
+                            <i class="bi bi-diagram-3-fill m-0" style="font-size:20px"></i>
+                        </button>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h3>
+                        İstasyona ait planlanmış bir çalışma bulunamadı.
+                        Lütfen yetkililerden çalışma planlamasını talep edin.
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div aria-live="polite" aria-atomic="true">
+        <div id="toast-container" class="toast-container position-absolute w-100 bottom-0 end-0 p-3" style="opacity: 1; z-index:999999">
+        </div>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+</body>
+</html>

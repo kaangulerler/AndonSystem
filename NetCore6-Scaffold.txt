@@ -1,0 +1,11 @@
+Microsoft.EntityFrameworkCore.Design
+Microsoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Tools
+
+ 
+
+
+Scaffold-DbContext "data source=192.168.1.250\\SQLEXPRESS;initial catalog=T3Andon;user id=sa;password=T3Otomasyon2006;MultipleActiveResultSets=True;App=EntityFramework" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Db  -Context XModel -NoPluralize -UseDatabaseNames -Force
+
+
+

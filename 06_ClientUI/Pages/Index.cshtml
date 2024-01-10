@@ -1,0 +1,73 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Istasyon Yazılımı";
+}
+
+<div class="container-fluid p-0 m-0" id="panel_CalismaVar" style="display:none">
+
+    <div class="row ps-2 mt-1">
+        <div class="input-group input-group  ms-1 p-0 col">
+            <button class="input-group-text m-0 p-0" id="inputGroup-sizing-lg" style="width:40px">
+                <i class="bi bi-upc-scan m-0 p-0 ms-2" style="font-size:24px"></i>
+            </button>
+            <input id="input_Barkod" type="text" class="form-control" placeholder="Barkod Okutun" onblur="this.focus()" autofocus>
+        </div>
+        <div class="col row m-0" style="max-width:300px">
+            <div class="input-group col ms-1 p-0">
+                <span class="input-group-text" id="ig_T">T</span>
+                <input id="label_T" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="ig_T">
+            </div>
+            <div class="input-group col ms-1 p-0">
+                <span class="input-group-text" id="ig_A">A</span>
+                <input id="label_A" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="ig_A">
+            </div>
+            <div class="input-group col ms-1 p-0">
+                <span class="input-group-text" id="ig_D">D</span>
+                <input id="label_D" type="text" class="form-control m-0" aria-label="Sizing example input" aria-describedby="ig_D">
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group w-100 mt-1">
+        <button class="btn btn-light" id="buton_Personel"> <i class="bi bi-person-video2"></i> Personel</button>
+        @*<button class="btn btn-light" id="buton_Rulo"> <i class="bi bi-geo-alt-fill"></i> Rulo</button>*@
+        <button class="btn btn-light" id="buton_Pano"> <i class="bi bi-upc-scan"></i> Pano</button>
+        <button class="btn btn-light" id="buton_Durus"> <i class="bi bi-exclamation-diamond-fill"></i> Duruş</button>
+        @*<button class="btn btn-light" id="buton_UretimBaslatBitir"> <i class="bi bi-send-fill"></i>  Başla / Bitir  </button>*@
+        <button class="btn btn-info" id="buton_Timer"> <i class="bi bi-clock-fill"></i> <span id="label_Zaman"></span> </button>
+    </div>
+     
+    <div id="panel_Aktif" class="card m-0 p-0 border border-dark">
+        <div id="tablo_Aktif" class="card-body p-0">
+        </div>
+    </div>
+
+</div>
+ 
+@*
+    <div id="panel_Biten" class="card mt-2 border border-secondary">
+        <div class="card-header text-bg-secondary m-0 ps-2 p-2">Tamamlanan Üretimler</div>
+        <div class="card-body p-1">
+            <table id="tablo_Biten" class="table table-striped table-bordered mt-1" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Pano </th>
+                        <th>Başlangıç </th>
+                        <th>Bitiş </th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+*@
+@*</div>*@
+
+
+<script src="~/js/index.js"></script>
+<script>
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+</script>

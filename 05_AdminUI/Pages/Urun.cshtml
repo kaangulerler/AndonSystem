@@ -1,0 +1,90 @@
+﻿@page
+@model _05_AdminUI.Pages.UrunModel
+@{
+}
+
+<form id="form-download" class="row needs-validation" asp-page-handler="Indir" method="post" enctype="multipart/form-data">
+</form>
+
+<div class="row m-1">
+    <div class="row">
+        <span class="col" style="width:400px; font-size:1.75rem;font-weight: 500;line-height: 1.2;"> Ürünler </span>
+        <div class="col-4 btn-group">
+            @if (User.HasClaim("Sayfa", "Urun"))
+            {
+                <button class="btn btn-primary float-end w-100" data-bs-toggle="modal" data-bs-target="#modal_UrunTipYukle" style="display: block;">
+                    <i class="bi bi-cloud-arrow-up-fill m-2"></i>
+                    Yükle
+                </button>
+                <button class="btn btn-success float-end w-100"
+                    type="submit" form="form-download"
+                    style="display: block;">
+                    <i class="bi bi-cloud-arrow-down-fill m-2"></i>
+                    İndir
+                </button>
+            }
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+
+        <table id="tablo" class="table table-striped table-bordered mt-1" style="width: 100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th> ProjectId </th>
+                    <th> ProjectName </th>
+                    <th> BOM </th>
+                    <th> SWITCHGEAR </th>
+                    <th> PANEL_No </th>
+                    <th> SHORTC_TIME </th>
+                    <th> ZS2_DISCON </th>
+                    <th> BAKOD </th>
+                </tr>
+            </thead>
+        </table>
+
+    </div>
+</div>
+
+<div class="modal" id="modal_Barkod_Goster" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 id="modal_Barkod_Goster_Title" class="modal-title"> Barkod </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modal_Barkod_Goster_Body" class="modal-body text-center">
+                <a id="barcode_download">
+                    <img id="barcode" style="height:136px!important; width:336px!important" />
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<form class="row needs-validation" method="post" enctype="multipart/form-data">
+    <div class="modal" id="modal_UrunTipYukle" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div id="modal_UrunTipYukle_Header" class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modal_UrunTipYukle_Title">Ürün Yükle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input type="file" asp-for="Dosya" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" id="modal_UrunTipYukle_InputFile" aria-describedby="modal_UrunTipYukle_Button" aria-label="Upload">
+                        <button class="btn btn-outline-primary"
+                                type="submit"
+                                id="modal_UrunTipYukle_Button">
+                            Yükle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/js/urun.js"></script>

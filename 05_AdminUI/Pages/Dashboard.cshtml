@@ -1,0 +1,62 @@
+﻿@page "{id?}"
+@model _05_AdminUI.Pages.DashboardModel
+@{
+    var id = Request.Query["id"];
+}
+
+<style>
+    .google-visualization-tooltip {
+        white-space: nowrap;
+        border-width: 0px;
+        border-radius: 5px;
+    }
+
+    .chart-g {
+        max-width: 600px;
+        min-width: 400px;
+        height: 400px;
+    }
+</style>
+
+<script>let id = "@Html.Raw(id)";</script>
+  
+<script src="~/charts/loader.js"></script>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script>
+
+
+</script>
+
+<div class="row ps-2 m-2">
+    <div class="col">
+        <h2 id="label_Kod">İstasyon</h2>
+    </div>
+    <div class="col row m-0" style="max-width:800px">
+        <div class="input-group col ms-1 p-0">
+            <span class="input-group-text" id="ig_T">TARGET</span>
+            <input id="label_T" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="ig_T">
+        </div>
+        <div class="input-group col ms-1 p-0">
+            <span class="input-group-text" id="ig_A">ACTUEL</span>
+            <input id="label_A" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="ig_A">
+        </div>
+        <div class="input-group col ms-1 p-0">
+            <span class="input-group-text" id="ig_D">DELTA</span>
+            <input id="label_D" type="text" class="form-control m-0" aria-label="Sizing example input" aria-describedby="ig_D" style="background: red; color: white;">
+        </div>
+    </div>
+</div> 
+
+<div id="chart_Timeline"></div>
+
+<div class="row d-flex justify-content-center m-2">
+
+    <div id="chart_Pie" class="col border rounded-1 m-2 chart-g"></div>
+
+    <div id="chart_Personel" class="border rounded-1 m-2 chart-g"></div>
+
+    <div id="chart_Durus" class="col border rounded-1 m-2 chart-g"></div>
+
+</div>
+
+<script src="~/js/dashboarddetay.js"></script>

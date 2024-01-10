@@ -1,0 +1,45 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<style>
+    .rotate {
+        writing-mode: vertical-lr;
+        text-orientation: sideways;
+        transform: rotate(-180deg);
+        margin: auto;
+        position: absolute;
+        height: 100%;
+        text-align: center;
+    }
+
+    
+
+    .buton-sayi{
+        font-size: 32px;
+        padding: 2px;
+        font-weight: bold;
+    }
+
+</style>
+
+<div class="d-flex justify-content-center mt-1 ">
+    <div>
+        <input type="checkbox" class="btn-check m-0" id="btn-check-zs1" name="istasyon" onclick="Tıkla()" autocomplete="off" value="ZS-1" checked>
+        <label class="btn btn-outline-dark m-0" for="btn-check-zs1" style="width:200px">ZS-1</label>
+
+        <input type="checkbox" class="btn-check m-0" id="btn-check-zs2" name="istasyon" onclick="Tıkla()" autocomplete="off" value="ZS-2" checked>
+        <label class="btn btn-outline-dark m-0" for="btn-check-zs2" style="width:200px">ZS-2</label>
+
+        <input type="checkbox" class="btn-check m-0" id="btn-check-mws" name="istasyon" onclick="Tıkla()" autocomplete="off" value="MWS" checked>
+        <label class="btn btn-outline-dark m-0" for="btn-check-mws" style="width:200px">MWS</label>
+    </div>
+</div>
+
+<div id="panel" class="text-center">
+</div>
+
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/js/dashboard.js"></script>

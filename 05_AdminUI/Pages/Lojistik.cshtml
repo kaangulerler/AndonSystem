@@ -1,0 +1,97 @@
+﻿@page
+
+@using Microsoft.Extensions.Configuration
+@using _01_DbModel
+@using Newtonsoft.Json
+@using _01_DbModel.AppModel
+
+
+@model _05_AdminUI.Pages.LojistikModel
+@{
+    Layout = null;
+}
+@inject IConfiguration Configuration
+
+@{
+
+    Dictionary<string, object> settings = Configuration.GetSection("IpAdres")
+                                                       .Get<Dictionary<string, object>>();
+    string json = JsonConvert.SerializeObject(settings);
+    var IpAdres = JsonConvert.DeserializeObject<IpAdres>(json);
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lojistik Sayfası</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/DataTables/DataTables-1.12.1/css/jquery.dataTables.min.css" asp-append-version="true" />
+    <style>
+        #tablo_ZS1_info, #tablo_ZS1_filter {
+            display: none
+        }
+
+        #tablo_ZS2_info, #tablo_ZS2_filter {
+            display: none
+        }
+    </style>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/popup/popper.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/DataTables/DataTables-1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+
+    <script>
+        let url = "";
+        url = '@Html.Raw(IpAdres?.IpApi.ToString())';
+    </script>
+</head>
+<body> 
+    <p class="text-center fs-2"><b> Lojistik Sayfası </b></p>
+
+    <div class="row m-1">
+        <div class="col">
+            <div class="card m-1">
+                <div class="card-header text-bg-dark">
+                    ZS1
+                </div>
+                <div class="card-body"> 
+                    <table id="tablo_ZS1" class="table table-striped table-bordered mt-1" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th>İstasyon </th>
+                                <th>WBS No</th>
+                                <th>Pano No</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card m-1">
+                <div class="card-header text-bg-dark">
+                    ZS2
+                </div>
+                <div class="card-body">
+
+                    <table id="tablo_ZS2" class="table table-striped table-bordered mt-1" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th>İstasyon </th>
+                                <th>WBS No</th>
+                                <th>Pano No</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/lojistik.js"></script>
+</body>
+</html>

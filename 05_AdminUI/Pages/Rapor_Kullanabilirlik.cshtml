@@ -1,0 +1,70 @@
+﻿@page
+@model _05_AdminUI.Pages.Rapor_KullanabilirlikModel
+@{
+    Layout = "_LayoutRapor"; 
+}
+<div class="collapse show" id="collapse_filtre">
+    <div class="card card-body text-bg-light">
+        <div class="row">
+            <div class="col row"> 
+                <div class="row">
+                    <div class="form-group col border rounded m-1 p-1" style="max-width:260px">
+                        <label for="filtre_istasyon" class="form-label"> İstasyon Seçin: </label> <br />
+                        <select id="filtre_istasyon" class="form-control" name="filtre_istasyon" multiple>
+                        </select>
+                    </div>
+                    <div class="form-group col row border rounded m-1 p-1" style="min-width:500px">
+                        <div class="form-label col">
+                            <label for="amount">  Tarih Aralığı : </label>
+                            <input type="text" id="amount" style="border: 0;" readonly />
+                        </div>
+                        <div id="slider-range" style="height:40px" class="form-control mb-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col" style="max-width:200px">
+                <div class="btn-group h-100">
+                    <button class="btn btn-secondary" onclick="Rapor_Kullanilabilirlik()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                        </svg>
+                        Göster
+                    </button>
+                    <button class="btn btn-success"
+                            type="submit" form="form-download"
+                            style="display: block;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                        </svg>
+                        İndir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<form id="form-download" class="row needs-validation" asp-page-handler="Indir" method="post" enctype="multipart/form-data">
+    <input type="hidden" id="input_List_Excel" asp-for="List_Excel" value="" />
+</form>
+
+<div id="panel_Orta" style="display:none" class="card card-body  mt-1">
+
+    <table id="tablo" class="table table-striped table-bordered mt-1" style="width: 100%">
+        <thead>
+            <tr> 
+                <th>Tarih </th>
+                <th>İstasyon </th>
+                <th>Planlanan Süre </th>
+                <th>Üretim Toplamı </th>
+                <th>Kullanılabilirlik </th>
+            </tr>
+        </thead> 
+    </table>
+
+</div>
+
+<script src="~/js/rapor_kullanilabilirlik.js"></script>

@@ -1,0 +1,72 @@
+﻿@page
+@model _05_AdminUI.Pages.BarkodModel
+@{
+}
+<div class="d-flex justify-content-center">
+    <div class="row" style="max-width:1200px">
+        <div class="row">
+            <h2>  Sistem Barkodları  </h2>
+            <hr/>
+        </div>
+        <div class="row">
+            <div class="col">
+                <a id="barcode_download_UretimBaslat" href="">
+                    <img id="barcode_UretimBaslat" />
+                </a>
+            </div>
+            <div class="col">
+                <a id="barcode_download_UretimBitir" href="">
+                    <img id="barcode_UretimBitir" />
+                </a>
+            </div>
+            <div class="col">
+                <a id="barcode_download_PersonelCik" href="">
+                    <img id="barcode_PersonelCik" />
+                </a>
+            </div>
+
+            <div class="col">
+                <a id="barcode_download_Iptal" href="">
+                    <img id="barcode_Iptal" />
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    BarkodGoster();
+
+    function BarkodGoster() {
+
+        JsBarcode("#barcode_UretimBaslat", 'F8BASLAT', {
+            text: 'ÜRETİM BAŞLAT'
+        });
+
+        document.getElementById("barcode_download_UretimBaslat").setAttribute("download", 'Barkod_UretimBaslat' + ".png");
+        document.getElementById("barcode_download_UretimBaslat").setAttribute("href", document.getElementById("barcode_UretimBaslat").src);
+
+        JsBarcode("#barcode_UretimBitir", 'F9BITIR', {
+            text: 'ÜRETİM BİTİR'
+        });
+
+        document.getElementById("barcode_download_UretimBitir").setAttribute("download", 'Barkod_UretimBitir' + ".png");
+        document.getElementById("barcode_download_UretimBitir").setAttribute("href", document.getElementById("barcode_UretimBitir").src);
+
+        JsBarcode("#barcode_PersonelCik", 'F7CIKIS', {
+            text: 'PERSONEL CIKIS'
+        });
+
+        document.getElementById("barcode_download_PersonelCik").setAttribute("download", 'Barkod_PersonelCikis' + ".png");
+        document.getElementById("barcode_download_PersonelCik").setAttribute("href", document.getElementById("barcode_PersonelCik").src);
+
+        JsBarcode("#barcode_Iptal", 'IPTAL', {
+            text: 'İPTAL'
+        });
+
+        document.getElementById("barcode_download_Iptal").setAttribute("download", 'Barcode_Iptal' + ".png");
+        document.getElementById("barcode_download_Iptal").setAttribute("href", document.getElementById("barcode_Iptal").src);
+    }
+
+</script>

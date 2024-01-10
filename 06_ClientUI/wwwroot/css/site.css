@@ -1,0 +1,32 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.progress {
+    height: 50px;
+}
+
+.progressText {
+    font-size: 32px;
+    font-weight: bold;
+    max-width: 80px;
+    margin: auto;
+    padding: 0px;
+    border-radius: 10px;
+    -webkit-text-stroke: 2px black;
+}

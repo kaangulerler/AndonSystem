@@ -1,0 +1,96 @@
+﻿@page
+@model _05_AdminUI.Pages.UrunTipModel
+@{
+}
+<form id="form-download" class="row needs-validation" asp-page-handler="Indir" method="post" enctype="multipart/form-data">
+</form>
+
+<div class="row m-1">
+    <div class="row">
+        <span class="col" style="width:400px; font-size:1.75rem;font-weight: 500;line-height: 1.2;"> Ürün Tipleri </span>
+        <div class="col-4 btn-group">
+            <button class="btn btn-secondary text-white float-end w-100" data-bs-toggle="modal" data-bs-target="#modal_UrunTipCevir" style="display: block;">
+                <i class="bi bi-recycle m-2"></i>
+                Çevir
+            </button>
+            <button class="btn btn-primary float-end w-100" data-bs-toggle="modal" data-bs-target="#modal_UrunTipYukle" style="display: block;">
+                <i class="bi bi-cloud-arrow-up-fill m-2"></i>
+                Yükle
+            </button>
+            <button class="btn btn-success float-end w-100"
+                    type="submit" form="form-download"
+                    style="display: block;">
+                <i class="bi bi-cloud-arrow-down-fill m-2"></i>
+                İndir
+            </button>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+
+        <table id="tablo" class="table table-striped table-bordered mt-1" style="width: 100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>PRODUCT </th>
+                    <th>RATED <br /> VOLT </th>
+                    <th>PANEL <br /> WIDTH </th>
+                    <th>PANEL <br /> TYPE</th>
+                    <th>PANEL <br /> CURR</th>
+                    <th>SHORTC <br /> CURR</th>
+                    <th>CT</th>
+                    <th>VT</th>
+                </tr>
+            </thead>
+        </table>
+
+    </div>
+</div>
+<form class="row needs-validation" method="post" enctype="multipart/form-data">
+    <div class="modal" id="modal_UrunTipYukle" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div id="modal_UrunTipYukle_Header" class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modal_UrunTipYukle_Title">Ürün Tip Yükle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input type="file" asp-for="Dosya" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" id="modal_UrunTipYukle_InputFile" aria-describedby="modal_UrunTipYukle_Button" aria-label="Upload">
+                        <button class="btn btn-outline-primary" 
+                                type="submit"
+                                id="modal_UrunTipYukle_Button">
+                            Yükle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form class="row needs-validation" method="post" enctype="multipart/form-data">
+    <div class="modal" id="modal_UrunTipCevir" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div id="modal_UrunTipCevir_Header" class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modal_UrunTipCevir_Title">Ürün Tip Yükle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input type="file" asp-for="Dosya" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" id="modal_UrunTipCevir_InputFile" aria-describedby="modal_UrunTipCevir_Button" aria-label="Upload">
+                        <button class="btn btn-outline-primary"
+                                asp-page-handler="Cevir"
+                                type="submit"
+                                id="modal_UrunTipCevir_Button">
+                            Çevir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/js/uruntip.js"></script>

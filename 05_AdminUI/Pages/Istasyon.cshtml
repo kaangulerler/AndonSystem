@@ -1,0 +1,423 @@
+﻿@page
+@model _05_AdminUI.Pages.IstasyonModel
+@{
+}
+
+<style type="text/css">
+    .popover {
+        max-width: 600px;
+    }
+
+    .modal {
+        z-index : 2000;
+    }
+     
+</style>
+
+<div class="d-flex">
+    <div class="accordionStili accordion">
+        <div class="btn-group w-100" style="display:none">
+            <button type="button"
+                    style="height:48px;"
+                    class="btn btn-primary"
+                    draggable='true'
+                    onclick="Lokasyon_Yeni()"
+                    ondragstart="Lokasyon_Yeni_DragStart(event)"
+                    title="Lokasyon eklemek için butona tıklayın veya aşağıda bulunan Lokasyon alanına sürükleyin.">
+                <svg class="bi" width="16" height="16"><use xlink:href="#Ekle" /></svg>
+                Yeni
+            </button>
+            <button id="panel_Detay_Buton_Sil" class="btn btn-danger text-center" style="height:48px" onclick="Lokasyon_Sil_BosMu()">
+                <svg class="bi" width="16" height="16"><use xlink:href="#Kaldir" /></svg>
+                Sil
+            </button>
+        </div>
+
+        <div id="treeMenu">
+        </div>
+
+       @* <div id="akordiyon_UstLokasyon" class=" p-0 m-0 border-0 h-100" style="margin-left:20px ;background-color:#121212; display:none">
+            <button id="btn_UstLokasyon" class="btn  text-start flex-grow-1 accordionMenusu w-100" type="button" ondragover="Lokasyon_AllowDrop(event)" ondrop="Lokasyon_Drop(this,event)" data-bs-toggle="collapse" data-bs-target="#panel_UstLokasyon" aria-expanded="true" aria-controls="panel_UstLokasyon">
+                <i class="bi bi-justify"></i>
+                <span id="text_UstLokasyon" style="margin-left:10px">
+                    Ana Lokasyon Ekle
+                </span>
+            </button>
+        </div>
+        *@
+    </div>
+    <div class="b-example-divider b-example-vr"></div>
+    <div class="p-0 m-3 w-100">
+        <h3>İstasyonlar</h3>
+        <hr />
+
+        <div class="row">
+            <span id="panel_Detay_Baslik" class="col" style="width:400px; font-size:24px"></span>
+            <div class="col-4 btn-group">
+                <button id="panel_Detay_Button_Duzenle"
+                        class="btn btn-success float-end w-100"
+                        data-bs-toggle="modal"
+                        onclick="Lokasyon_Islem_Tip(0)"
+                        data-bs-target="#modal_Plan">
+                    <i class="bi bi-alarm m-2"></i>
+                    
+                </button>
+                <button id="panel_Detay_Button_Yeni"
+                        onclick="Lokasyon_Islem_Tip(1)"
+                        class="btn btn-info float-end w-100"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal_Vardiya">
+                    <i class="bi bi-clock m-2"></i> 
+                </button>
+            </div>
+        </div>
+
+        <div id="panel_Detay_List" class="row">
+        </div>
+    </div>
+</div>
+ 
+<iframe id="main-iframe" type="application/pdf" style="width: 100%; height: 100%;"></iframe>
+
+@*Lokasyon Modal*@
+<div class="modal" id="modal_Lokasyon" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div id="modal_Lokasyon_Header" class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modal_Lokasyon_Title">Yeni Lokasyon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating input-group m-1">
+                    <input id="modal_Lokasyon_Input_LokasyonId" type="hidden" class="form-control" autocomplete="modal_Lokasyon_Input_Kod" aria-required="true" aria-describedby="modal_Lokasyon_Buton_Ayar" required />
+                    <input id="modal_Lokasyon_Input_Kod" class="form-control" autocomplete="modal_Lokasyon_Input_Kod" aria-required="true" aria-describedby="modal_Lokasyon_Buton_Ayar" required />
+                    <label> Lokasyon Kodu </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="modal_Lokasyon_Buton_Kaydet" onclick="Lokasyon_Ekle()" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+@*Lokasyon Sil*@
+<div class="modal" id="modal_Lokasyon_Sil" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"> Lokasyon Sil </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4>
+                    Lokasyon silinecek ! Onaylıyor musunuz ?
+                </h4>
+
+                <div class="form-group">
+                    <span id="modal_Lokasyon_Sil_Kod" />
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" onclick="Lokasyon_Sil()" class="btn btn-danger">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Lokasyon Taşıma Modal*@
+<div class="modal" id="modal_Lokasyon_Tasi" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div id="modal_Lokasyon_Tasi_Header" class="modal-header bg-warning">
+                <h5 class="modal-title" id="modal_Lokasyon_Tasi_Title">Lokasyon Taşıma</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class=" d-flex justify-content-between">
+                    <div>
+                        <span class="align-middle" id="modal_Lokasyon_Tasi_Input_Kod1" />
+                    </div>
+                    <span class="align-middle" style="font-size:24px">
+                        ➤
+                    </span>
+                    <div>
+                        <span class="align-middle" id="modal_Lokasyon_Tasi_Input_Kod2" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="modal_Lokasyon_Tasi_Buton_Kaydet" onclick="Lokasyon_Tasi()" class="btn btn-primary"> Taşı </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Istasyon Modal*@
+<div class="modal" id="modal_Istasyon" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div id="modal_Istasyon_Header" class="modal-header bg-primary text-white">
+                <h5 id="modal_Istasyon_Title" class="modal-title">Yeni Istasyon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modal_Istasyon_Input_Sira" required />
+
+                <div class="form-floating mb-2">
+                    <select id="modal_Istasyon_Input_LokasyonId" class="form-select" required></select>
+                    <label> Lokasyon </label>
+                </div>
+
+                <div class="form-floating input-group m-1">
+                    <input id="modal_Istasyon_Input_Kod" class="form-control" autocomplete="modal_Istasyon_Input_Kod"
+                           aria-required="true" required />
+                    <label> Istasyon Kodu </label>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="closeModal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="modal_Istasyon_Buton_Kaydet" type="button" onclick="Istasyon_Ekle()" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Istasyon Sil*@
+<div class="modal" id="modal_Istasyon_Sil" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Istasyon Sil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4>
+                    İstasyon silinecek ! Onaylıyor musunuz ?
+                </h4>
+
+                <div class="form-group">
+                    <b><span id="modal_Istasyon_Sil_Kod" /></b>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" onclick="Istasyon_Sil()" class="btn btn-danger">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*İstasyon Taşıma Modal*@
+<div class="modal" id="modal_Istasyon_Tasi" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div id="modal_Istasyon_Tasi_Header" class="modal-header bg-warning">
+                <h5 class="modal-title" id="modal_Istasyon_Tasi_Title">Istasyon Taşıma</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class=" d-flex justify-content-between">
+                    <div>
+                        <span class="align-middle" id="modal_Istasyon_Tasi_Input_Kod1" />
+                    </div>
+                    <span class="align-middle" style="font-size:24px">
+                        ➤
+                    </span>
+                    <div>
+                        <span class="align-middle" id="modal_Istasyon_Tasi_Input_Kod2" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="modal_Istasyon_Tasi_Buton_Kaydet" onclick="Istasyon_Tasi()" class="btn btn-primary"> Taşı </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Barkod Modal*@
+<div class="modal" id="modal_Barkod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div id="modal_Barkod_Header" class="modal-header bg-dark text-white">
+                <h5 id="modal_Barkod_Title" class="modal-title">Barkod</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <a id="barcode_download" href="">
+                    <img id="barcode" />
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Vardiya Modal*@
+<div class="modal" id="modal_Vardiya" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div id="modal_Vardiya_Header" class="modal-header bg-info">
+                <h5 id="modal_Vardiya_Title" class="modal-title">Vardiya</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modal_Vardiya_List">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="modal_Vardiya_Buton_Kaydet" type="button" onclick="Vardiya_Kaydet()" class="btn btn-primary">Kaydet</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Planlı Çalışma Modal*@
+<form class="row needs-validation" onsubmit="return false">
+    <div class="modal" id="modal_Plan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div id="modal_Plan_Header" class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modal_Plan_Title">Yeni Plan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-floating mt-1">
+                        <input id="modal_Plan_Input_Aciklama" class="form-control" autocomplete="modal_Plan_Input_Kod" aria-required="true" required />
+                        <label> Açıklama </label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mt-1">
+                                <input id="modal_Plan_Input_Bas" type="datetime-local" class="form-control" autocomplete="modal_Plan_Input_Bas" aria-required="true" required />
+                                <label> Başlangıç </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating m-1">
+                                <input id="modal_Plan_Input_Bit" type="datetime-local" class="form-control" autocomplete="modal_Plan_Input_Bit" aria-required="true" required />
+                                <label> Bitiş </label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-floating m-1">
+                                <input id="modal_Plan_Input_Hedef" type="number" class="form-control" autocomplete="modal_Plan_Input_Hedef" aria-required="true" required />
+                                <label> Hedef </label>
+                            </div>
+                        </div>
+
+                        <div class="col" style="max-width:120px">
+                            <div class="form-floating mt-1">
+                                <button type="button"
+                                        class="btn btn-primary w-100"
+                                        style="height: calc(3.5rem + 2px);"
+                                        onclick="Plan_Ekle()">
+                                    <i class="bi bi-plus-square"></i>
+                                    Yeni
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer row">
+                    <div class="row">
+                        <table id="tablo" class="table table-striped table-bordered mt-1" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>İstasyon </th>
+                                    <th>Açıklama </th>
+                                    <th>Başlangıç</th>
+                                    <th>Bitiş</th>
+                                    <th>Hedef </th>
+                                    <th>Zaman</th>
+                                    <th style="width:70px"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@*Planlı Duruş Modal*@
+<form class="row needs-validation" onsubmit="return false">
+    <div class="modal" id="modal_Durus" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div id="modal_Durus_Header" class="modal-header bg-warning">
+                    <h5 class="modal-title" id="modal_Durus_Title"> </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-floating mt-1">
+                        <input id="modal_Durus_Input_Aciklama" class="form-control" autocomplete="modal_Durus_Input_Kod" aria-required="true" required />
+                        <label> Açıklama </label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mt-1">
+                                <input id="modal_Durus_Input_Bas" type="datetime-local" class="form-control" autocomplete="modal_Durus_Input_Bas" aria-required="true" required />
+                                <label> Başlangıç </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating m-1">
+                                <input id="modal_Durus_Input_Bit" type="datetime-local" class="form-control" autocomplete="modal_Durus_Input_Bit" aria-required="true" required />
+                                <label> Bitiş </label>
+                            </div>
+                        </div>
+
+                        <div class="col" style="max-width:120px">
+                            <div class="form-floating mt-1">
+                                <button type="button"
+                                        class="btn btn-primary w-100"
+                                        style="height: calc(3.5rem + 2px);"
+                                        onclick="Planli_Durus_Ekle()">
+                                    <i class="bi bi-plus-square"></i>
+                                    Yeni
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer row">
+                    <div class="row">
+                        <table id="tabloPlanDurus" class="table table-striped table-bordered mt-1" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>İstasyon </th>
+                                    <th>Açıklama </th>
+                                    <th>Başlangıç</th>
+                                    <th>Bitiş</th>
+                                    <th>Zaman</th>
+                                    <th style="width:70px"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+ 
+<script src="~/js/istasyon.js"></script>

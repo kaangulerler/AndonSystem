@@ -1,0 +1,144 @@
+﻿@page
+@model _05_AdminUI.Pages.VardiyaModel
+@{
+}
+
+<style>
+    #example_filter input {
+        border-radius: 5px;
+        width: 400px;
+        height: 70px;
+        font-size: 24px;
+    }
+</style>
+
+<h3>Vardiya Listesi</h3>
+<hr />
+<table id="tablo" class="table table-striped table-bordered mt-1" style="width: 100%">
+    <thead>
+        <tr>
+            <th>Vardiya Adı </th>
+            <th>Başlangıç</th>
+            <th>Bitiş</th>
+            <th>Toplam Mola Süresi <br /> (Dakika) </th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+
+<form class="row needs-validation" onsubmit="return false">
+    <div class="modal" id="modal_Vardiya" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered">
+            <div class="modal-content">
+                <div id="modal_Vardiya_Header" class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modal_Vardiya_Title">Yeni Vardiya</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mt-1">
+                        <input id="modal_Vardiya_Input_Kod" class="form-control" autocomplete="modal_Vardiya_Input_Kod" aria-required="true" required />
+                        <label> Vardiya Kodu </label>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div id="Vardiya_Gun_List"></div>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-floating mt-1">
+                                <input id="modal_Vardiya_Input_Bas" type="time" class="form-control" autocomplete="modal_Vardiya_Input_Bas" aria-required="true" required />
+                                <label> Başlangıç </label>
+                            </div>
+                            <div class="form-floating mt-1">
+                                <input id="modal_Vardiya_Input_Bit" type="time" class="form-control" autocomplete="modal_Vardiya_Input_Bit" aria-required="true" required />
+                                <label> Bitiş </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="modal_Vardiya_Button_Kapat" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button type="submit" id="modal_Vardiya_Buton_Kaydet" onclick="Vardiya_Ekle()" class="btn btn-primary">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="modal" id="modal_Vardiya_Sil" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 id="modal_Vardiya_Sil_Title" class="modal-title"> </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modal_Vardiya_Sil_Body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <button type="button" onclick="Vardiya_Sil()" class="btn btn-danger">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal_Mola" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div id="modal_Mola_Header" class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="modal_Mola_Title">Mola Listesi</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-floating mt-1">
+                    <input id="modal_Mola_Input_Kod" class="form-control" autocomplete="modal_Mola_Input_Kod" aria-required="true" required />
+                    <label> Mola Kodu </label>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-floating mt-1">
+                            <input id="modal_Mola_Input_Bas" type="time" class="form-control" autocomplete="modal_Mola_Input_Bas" aria-required="true" required />
+                            <label> Başlangıç </label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-floating mt-1">
+                            <input id="modal_Mola_Input_Bit" type="time" class="form-control" autocomplete="modal_Mola_Input_Bit" aria-required="true" required />
+                            <label> Bitiş </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row ">
+                    <hr class="m-3" />
+                    Mola Listesi
+                    <table id="tablo_Mola" class="table table-striped table-bordered mt-1" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th>Mola Adı </th>
+                                <th>Başlangıç</th>
+                                <th>Bitiş</th>
+                                <th>Toplam Mola Süresi <br /> (Dakika) </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modal_Mola_Button_Kapat" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <button type="submit" id="modal_Mola_Buton_Kaydet" onclick="Mola_Ekle()" class="btn btn-primary">Kaydet</button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/js/vardiya.js"></script>

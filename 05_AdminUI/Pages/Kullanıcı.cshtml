@@ -1,0 +1,228 @@
+﻿@page
+@model _05_AdminUI.Pages.KullanıcıModel
+@{
+}
+
+<div>
+    <div class="m-auto mt-2" style="width:1000px">
+        <div class="row">
+            <div class="col">
+                <h2> Kullanıcı Listesi  </h2>
+            </div>
+            <div class="col">
+                <button class="float-end btn btn-dark" style="width: 200px" data-bs-toggle="modal" data-bs-target="#yeni_Kullanıcı">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z" />
+                    </svg>
+                    <br />
+                    Yeni
+                </button>
+            </div>
+        </div>
+        <hr />
+
+    </div>
+    <div class="row d-flex justify-content-center pt-2">
+        <table class="table table-hover rounded rounded-2 border border-2" style="width:1000px">
+            <thead>
+                <tr>
+                    <th scope="col" style="width:200px">Kullanıcı</th>
+                    <th scope="col">Yetkiler</th>
+                    <th scope="col" style="width:300px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var _Kullanıcı in Model.Kullanıcı_Listesi)
+                {
+                    if (_Kullanıcı.Username != "T3")
+                    {
+                        string collapse = "coll_" + _Kullanıcı.Username;
+                        string collapsed = "colld_" + _Kullanıcı.Username;
+                        <tr>
+                            <td> @_Kullanıcı.Username </td>
+                            <td> @String.Join(" , ",  _Kullanıcı.ClaimList.Select(p=>p.Value)) </td>
+                            <td>
+                                <div class="btn-group w-100">
+
+                                    <button type="button" class="btn btn-primary" style="width:100px" data-bs-toggle="collapse" data-bs-target="#@collapsed">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                                        </svg> <br />
+                                        Yetkiler
+                                    </button>
+
+                                    <button type="button" class="btn btn-danger" style="width:100px" data-bs-toggle="collapse" data-bs-target="#@collapse">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                                        </svg> <br />
+                                        Sil
+                                    </button>
+                                </div>
+
+                                <div class="collapse" id=@collapse>
+                                    <div class="card card-body">
+                                        Kullanıcı silinecek! <br /> Onaylıyor musunuz ?
+
+                                        <form asp-page-handler="delete" asp-route-id="@_Kullanıcı.Username" method="post">
+                                            <button class="btn btn-danger w-100"> Evet </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="collapse" id=@collapsed>
+                                    <div class="card card-body">
+                                        <form asp-page-handler="kaydet" asp-route-id="@_Kullanıcı.Username" method="post">
+
+                                            @{
+                                                string durum_UrunTip = "";
+                                                string durum_Urun = "";
+                                                string durum_DurusTip = "";
+                                                string durum_Rapor = "";
+                                                string durum_Kullanıcı = "";
+                                                string durum_Vardiya = "";
+                                                string durum_Istasyon = "";
+                                                string durum_Personel = "";
+
+                                                if (_Kullanıcı.ClaimList.Where(p => p.Value == "UrunTip").Any()) durum_UrunTip = "checked";
+                                                if (_Kullanıcı.ClaimList.Where(p => p.Value == "Urun").Any()) durum_Urun = "checked";
+                                                if (_Kullanıcı.ClaimList.Where(p => p.Value == "DurusTip").Any()) durum_DurusTip = "checked";
+                                                if (_Kullanıcı.ClaimList.Where(p => p.Value == "Rapor").Any()) durum_Rapor = "checked";
+                                                if (_Kullanıcı.ClaimList.Where(p => p.Value == "Kullanıcı").Any()) durum_Kullanıcı = "checked";
+                                                if (_Kullanıcı.ClaimList.Where(p => p.Value == "Vardiya").Any()) durum_Vardiya = "checked";
+                                                if (_Kullanıcı.ClaimList.Where(p => p.Value == "Istasyon").Any()) durum_Istasyon = "checked";
+                                                if (_Kullanıcı.ClaimList.Where(p => p.Value == "Personel").Any()) durum_Personel = "checked";
+
+                                            }
+
+                                            <div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" name="YetkiList" value="UrunTip" type="checkbox" role="switch" id="checkbox_UrunTip" @durum_UrunTip>
+                                                    <label class="form-check-label" for="checkbox_UrunTip">Ürün Tip Sayfası</label>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" name="YetkiList" value="Urun" type="checkbox" role="switch" id="checkbox_Urun" @durum_Urun>
+                                                    <label class="form-check-label" for="checkbox_Urun">Ürün Sayfası</label>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" name="YetkiList" value="DurusTip" type="checkbox" role="switch" id="checkbox_DurusTip" @durum_DurusTip>
+                                                    <label class="form-check-label" for="checkbox_DurusTip">Duruş Tip Sayfası</label>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" name="YetkiList" value="Rapor" type="checkbox" role="switch" id="checkbox_Rapor" @durum_Rapor>
+                                                    <label class="form-check-label" for="checkbox_Rapor">Rapor Sayfası</label>
+                                                </div>
+                                                 
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" name="YetkiList" value="Kullanıcı" type="checkbox" role="switch" id="checkbox_Kullanıcı" @durum_Kullanıcı>
+                                                    <label class="form-check-label" for="checkbox_Kullanıcı">Kullanıcı Sayfası</label>
+                                                </div>
+
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" name="YetkiList" value="Vardiya" type="checkbox" role="switch" id="checkbox_Vardiya" @durum_Vardiya>
+                                                    <label class="form-check-label" for="checkbox_Vardiya">Vardiya Sayfası</label>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" name="YetkiList" value="Istasyon" type="checkbox" role="switch" id="checkbox_Istasyon" @durum_Istasyon>
+                                                    <label class="form-check-label" for="checkbox_Istasyon">Istasyon Sayfası</label>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" name="YetkiList" value="Personel" type="checkbox" role="switch" id="checkbox_Personel" @durum_Personel>
+                                                    <label class="form-check-label" for="checkbox_Personel">Personel Sayfası</label>
+                                                </div>
+                                            </div>
+
+                                            <button class="btn btn-warning w-100"> Kaydet </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="yeni_Kullanıcı" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-bg-primary">
+                <h5 class="modal-title"> Yeni Kullanıcı </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form id="registerForm" method="post">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-floating mb-1">
+                        <input asp-for="Input.Username" class="form-control" autocomplete="username" aria-required="true" />
+                        <label asp-for="Input.Username"></label>
+                        <span asp-validation-for="Input.Username" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+                        <label asp-for="Input.Password"></label>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                        <label asp-for="Input.ConfirmPassword"></label>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" name="YetkiList" value="UrunTip" type="checkbox" role="switch" id="checkbox_UrunTip" >
+                            <label class="form-check-label" for="checkbox_UrunTip">Ürün Tip Sayfası</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" name="YetkiList" value="DurusTip" type="checkbox" role="switch" id="checkbox_DurusTip" >
+                            <label class="form-check-label" for="checkbox_DurusTip">Duruş Tip Sayfası</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" name="YetkiList" value="Urun" type="checkbox" role="switch" id="checkbox_Urun" >
+                            <label class="form-check-label" for="checkbox_Urun">Ürün Sayfası</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" name="YetkiList" value="Rapor" type="checkbox" role="switch" id="checkbox_Rapor" >
+                            <label class="form-check-label" for="checkbox_Rapor">Rapor Sayfası</label>
+                        </div>
+
+                        @*<div class="form-check form-switch">
+                            <input class="form-check-input" name="YetkiList" value="DashboardDetay" type="checkbox" role="switch" id="checkbox_DashboardDetay" >
+                            <label class="form-check-label" for="checkbox_DashboardDetay">Dashboard Sayfası</label>
+                        </div>*@
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" name="YetkiList" value="Kullanıcı" type="checkbox" role="switch" id="checkbox_Kullanıcı" >
+                            <label class="form-check-label" for="checkbox_Kullanıcı">Kullanıcı Sayfası</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" name="YetkiList" value="Vardiya" type="checkbox" role="switch" id="checkbox_Vardiya" >
+                            <label class="form-check-label" for="checkbox_Vardiya">Vardiya Sayfası</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" name="YetkiList" value="Istasyon" type="checkbox" role="switch" id="checkbox_Istasyon" >
+                            <label class="form-check-label" for="checkbox_Istasyon">Istasyon Sayfası</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" name="YetkiList" value="Personel" type="checkbox" role="switch" id="checkbox_Personel" >
+                            <label class="form-check-label" for="checkbox_Personel">Personel Sayfası</label>
+                        </div>
+                    </div>
+
+                    <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary"> Kaydet </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
